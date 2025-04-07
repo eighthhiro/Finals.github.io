@@ -30,9 +30,9 @@ const ground = {
 // Box obstacle on ground
 const boxObstacle = {
   x: 420,
-  y: canvas.height - 80 - 52, // On ground
-  width: 52,
-  height: 52,
+  y: canvas.height - 80 - 60, // On ground (slightly bigger)
+  width: 60,
+  height: 60,
   color: '#8B4513',
   image: boxImage
 };
@@ -40,9 +40,9 @@ const boxObstacle = {
 // Characters
 const sova = {
   x: 100,
-  y: canvas.height - 190,
-  width: 120,
-  height: 120,
+  y: canvas.height - 200, // Slightly bigger and positioned higher
+  width: 140,
+  height: 140,
   color: '#00f0ff',
   image: sovaImage
 };
@@ -64,7 +64,7 @@ const bomb = {
 const defenders = [
   { 
     x: canvas.width - 200, 
-    y: canvas.height - 80 - 120, // On ground
+    y: canvas.height - 80 - 130, // Slightly floating due to transparency
     width: 120,
     height: 120,
     hp: 100, 
@@ -98,12 +98,12 @@ function resizeCanvas() {
   ground.y = canvas.height - 80;
   ground.width = canvas.width;
 
-  sova.y = canvas.height - 190;
+  sova.y = canvas.height - 200;
   bomb.y = canvas.height - 120;
   boxObstacle.y = canvas.height - 80 - boxObstacle.height;
   
   defenders.forEach(defender => {
-    defender.y = ground.y - defender.height;
+    defender.y = ground.y - defender.height + 10; // Slight floating effect
   });
 }
 window.addEventListener('resize', resizeCanvas);
@@ -130,7 +130,7 @@ function createArrow(x, y, vx, vy) {
   const angle = Math.atan2(vy, vx);
   return {
     x, y, vx, vy,
-    width: 35,
+    width: 40, // Slightly bigger arrow
     height: 20,
     angle,
     stuck: false,
@@ -249,7 +249,7 @@ function checkDefuserProximity() {
       // Smooth movement to defuse position
       const moveSpeed = 0.3;
       defender.x += (defender.targetX - defender.x) * moveSpeed;
-      defender.y = ground.y - defender.height;
+      defender.y = ground.y - defender.height + 10; // Maintain floating effect
       
       if (!defender.defusing) {
         defender.defuseStartTime = Date.now();
@@ -297,11 +297,11 @@ function applyArrowDamage() {
 function updateDefenders() {
   defenders.forEach((defender) => {
     // Ground check
-    if (defender.y + defender.height < ground.y) {
+    if (defender.y + defender.height < ground.y + 10) { // Account for floating
       defender.y += 5; // Gravity
       defender.onGround = false;
     } else {
-      defender.y = ground.y - defender.height;
+      defender.y = ground.y - defender.height + 10; // Maintain floating effect
       defender.onGround = true;
     }
 
@@ -323,10 +323,12 @@ function updateDefenders() {
 
 // Main game loop
 function drawScene() {
-  // Clear and draw background
+  // Clear and draw background with transparency
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (backgroundImage.complete) {
+    ctx.globalAlpha = 0.3; // Make background slightly transparent
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1.0; // Reset alpha for other elements
   }
 
   // Draw trajectory if dragging
