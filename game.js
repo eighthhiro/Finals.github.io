@@ -35,9 +35,9 @@ let gameState = {
         },
         3: { 
             defenders: [
-                { x: 1200, hp: 100, speed: 1.5 },
-                { x: 1200, hp: 100, speed: 1.5 },
-                { x: 1200, hp: 100, speed: 1.5 }
+                { x: 1200, hp: 150, speed: 1.5 },
+                { x: 1200, hp: 150, speed: 1.5 },
+                { x: 1200, hp: 150, speed: 1.5 }
             ],
             bomb: { x: 700, y: 0, defuseTime: 8000 },
             obstacles: [
@@ -58,6 +58,8 @@ let gameState = {
                 { x: 450, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' },
+                { x: 700, width: 60, height: 60, type: 'box' },
+                { x: 800, width: 60, height: 60, type: 'box' }
             ]
         },
         5: { 
@@ -72,7 +74,7 @@ let gameState = {
             obstacles: [
                 { x: 450, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' },
-                { x: 550, width: 60, height: 60, type: 'box' },
+                { x: 550, width: 60, height: 60, type: 'box' }
             ]
         }
     }
@@ -243,8 +245,8 @@ function initializeLevel(level) {
     gameState.defenders = config.defenders.map(def => ({
         x: def.x,
         y: canvas.height - 80 - 130,
-        width: 120,
-        height: 120,
+        width: 92,
+        height: 95,
         hp: def.hp,
         color: 'purple',
         speed: def.speed,
@@ -294,7 +296,7 @@ function resizeCanvas() {
     
     if (gameState.defenders.length > 0) {
         gameState.defenders.forEach(defender => {
-            defender.y = canvas.height - 80 - 120 + 10; // Account for floating effect
+            defender.y = canvas.height - 80 - 120; //
         });
     }
 }
@@ -422,11 +424,25 @@ function drawRect(obj) {
 }
 
 function drawHealthBar(defender) {
+    // Base red bar (full width)
     ctx.fillStyle = 'red';
     ctx.fillRect(defender.x, defender.y - 10, defender.width, 5);
+
+    // Green health portion (capped to 100%)
+    const hpRatio = defender.hp / 100;
+    const greenWidth = Math.min(hpRatio, 1) * defender.width;
     ctx.fillStyle = 'green';
-    ctx.fillRect(defender.x, defender.y - 10, (defender.hp / 100) * defender.width, 5);
+    ctx.fillRect(defender.x, defender.y - 10, greenWidth, 5);
+
+    // Overheal portion (above the red bar)
+    if (hpRatio > 1) {
+        const grayWidth = (hpRatio - 1) * defender.width;
+        ctx.fillStyle = 'gray';
+        ctx.fillRect(defender.x, defender.y - 16, grayWidth, 5);
+    }
 }
+
+
 
 function drawArrow(arrow) {
     if (images.arrow && images.arrow.complete) {
@@ -493,6 +509,16 @@ function drawTrajectory(startX, startY, velocityX, velocityY) {
 
 // Game logic functions
 function checkDefuserProximity() {
+    let isSomeoneDefusing = false;
+    
+    // First pass to check if anyone is already defusing
+    gameState.defenders.forEach(defender => {
+        if (defender.defusing) {
+            isSomeoneDefusing = true;
+        }
+    });
+    
+    // Second pass to handle proximity and defusing logic
     gameState.defenders.forEach((defender) => {
         const spikeCenterX = bomb.x + bomb.width/2;
         const spikeCenterY = bomb.y + bomb.height/2;
@@ -503,24 +529,28 @@ function checkDefuserProximity() {
         const minDist = 100;
         
         if (dist < minDist && bomb.planted && !bomb.defused) {
-            // Position to left or right of spike
-            if (defender.x < bomb.x) {
-                defender.targetX = bomb.x - defender.width - 10;
-            } else {
-                defender.targetX = bomb.x + bomb.width + 10;
+            // Only allow defusing if no one else is defusing
+            if (!isSomeoneDefusing) {
+                // Position to left or right of spike
+                if (defender.x < bomb.x) {
+                    defender.targetX = bomb.x - defender.width - 10;
+                } else {
+                    defender.targetX = bomb.x + bomb.width + 10;
+                }
+                
+                // Smooth movement to defuse position
+                const moveSpeed = 0.3;
+                defender.x += (defender.targetX - defender.x) * moveSpeed;
+                defender.y = ground.y - defender.height + 10;
+                
+                if (!defender.defusing) {
+                    defender.defuseStartTime = Date.now();
+                    bomb.defuseStartTime = Date.now();
+                }
+                defender.defusing = true;
+                bomb.defuserNearby = true;
+                isSomeoneDefusing = true; // Mark that someone is now defusing
             }
-            
-            // Smooth movement to defuse position
-            const moveSpeed = 0.3;
-            defender.x += (defender.targetX - defender.x) * moveSpeed;
-            defender.y = ground.y - defender.height + 10; // Maintain floating effect
-            
-            if (!defender.defusing) {
-                defender.defuseStartTime = Date.now();
-                bomb.defuseStartTime = Date.now();
-            }
-            defender.defusing = true;
-            bomb.defuserNearby = true;
         } else {
             defender.defusing = false;
         }
@@ -557,6 +587,8 @@ function updateBombTimer() {
 }
 
 function applyArrowDamage() {
+    let defuserDied = false;
+    
     for (let a = gameState.arrows.length - 1; a >= 0; a--) {
         const arrow = gameState.arrows[a];
         
@@ -571,7 +603,7 @@ function applyArrowDamage() {
                 arrow.y - arrow.height/2 < defender.y + defender.height) {
                 
                 // Check if headshot (upper 1/3 of defender)
-                const isHeadshot = arrow.y < defender.y + defender.height/3;
+                const isHeadshot = arrow.y < defender.y + defender.height/4;
                 const damage = isHeadshot ? 100 : 50;
                 
                 defender.hp -= damage;
@@ -581,6 +613,12 @@ function applyArrowDamage() {
                 showDamageText(arrow.x, arrow.y, damage, isHeadshot);
                 
                 if (defender.hp <= 0) {
+                    // Check if this was the defusing defender
+                    if (defender.defusing) {
+                        defuserDied = true;
+                        bomb.defuserNearby = false;
+                    }
+                    
                     gameState.defenders.splice(d, 1);
                     gameState.enemiesDefeated++;
                     
@@ -598,6 +636,11 @@ function applyArrowDamage() {
                 break;
             }
         }
+    }
+    
+    // If the defusing defender died, allow another defender to start defusing
+    if (defuserDied) {
+        checkDefuserProximity();
     }
 }
 
@@ -638,39 +681,39 @@ function updateDamageTexts() {
     }
 }
 
-// Replace the updateDefenders function with this new version:
+// Replace the updateDefenders function with this simplified version:
 function updateDefenders() {
-    gameState.defenders.forEach((defender) => {
+    // Check if anyone is currently defusing
+    const defuser = gameState.defenders.find(d => d.defusing);
+    
+    gameState.defenders.forEach((defender, index) => {
         // Ground check
-        defender.y = ground.y - defender.height + 10; // Maintain floating effect
+        defender.y = ground.y - defender.height;
         defender.onGround = true;
 
-        if (!defender.defusing) {
-            // Move toward bomb
+        if (defender.defusing) {
+            // This defender is defusing - they're already positioned correctly
+            return;
+        }
+        
+        if (defuser) {
+            // There's a defuser - position other defenders in a line near the spike
+            const lineOffset = (index % 2 === 0 ? 1 : -1) * Math.ceil(index / 2) * (defender.width + 10);
+            
+            // Target position is to the side of the spike, forming a line
+            defender.targetX = bomb.x + lineOffset;
+            
+            // Smooth movement to line position
+            const moveSpeed = 0.2;
+            defender.x += (defender.targetX - defender.x) * moveSpeed;
+            defender.y = ground.y - defender.height + 10;
+        } else {
+            // No one is defusing - move straight toward bomb
             const dx = bomb.x - defender.x;
             const moveDirection = dx > 0 ? 1 : -1;
             
-            // Check for obstacles in path
-            let canMoveStraight = true;
-            for (const obstacle of obstacles) {
-                // Check if defender is at obstacle's x position
-                if ((moveDirection > 0 && defender.x + defender.width > obstacle.x && defender.x < obstacle.x + obstacle.width) ||
-                    (moveDirection < 0 && defender.x < obstacle.x + obstacle.width && defender.x + defender.width > obstacle.x)) {
-                    
-                    // Check if there's space to go around (right side)
-                    if (moveDirection > 0) {
-                        defender.x = obstacle.x + obstacle.width + 5;
-                    } else {
-                        defender.x = obstacle.x - defender.width - 5;
-                    }
-                    canMoveStraight = false;
-                    break;
-                }
-            }
-            
-            if (canMoveStraight) {
-                defender.x += moveDirection * defender.speed;
-            }
+            // Simple movement without obstacle checks
+            defender.x += moveDirection * defender.speed;
         }
     });
 }
@@ -686,9 +729,9 @@ function spawnDefenders() {
             const def = spawnInfo.config;
             gameState.defenders.push({
                 x: def.x,
-                y: canvas.height - 80 - 120 + 10,
-                width: 120,
-                height: 120,
+                y: canvas.height - 80 - 120,
+                width: 92,
+                height: 95,
                 hp: def.hp,
                 color: 'purple',
                 speed: def.speed,
@@ -813,7 +856,7 @@ function drawScene() {
         ctx.globalAlpha = 1.0;
     }
 
-    // Calculate and draw trajectory if player is aiming
+    // Draw trajectory if aiming (unchanged)
     if (isDragging && startPoint && currentPoint) {
         const dx = startPoint.x - currentPoint.x;
         const dy = startPoint.y - currentPoint.y;
@@ -824,7 +867,7 @@ function drawScene() {
             dy * 0.2
         );
         
-        // Draw power meter
+        // Draw power meter (unchanged)
         const distance = Math.sqrt(dx * dx + dy * dy);
         const strength = Math.min(distance / 200, 1);
         const meterX = sova.x + sova.width + 10;
@@ -836,12 +879,18 @@ function drawScene() {
         ctx.fillRect(meterX, meterY + 50, 10, -100 * strength);
     }
 
-    // Draw game objects
+    // Draw ground
     drawRect(ground);
 
     // Draw obstacles
     obstacles.forEach(obstacle => {
         drawRect(obstacle);
+    });
+
+    // Draw defenders
+    gameState.defenders.forEach(defender => {
+        drawRect(defender);
+        drawHealthBar(defender);
     });
 
     // Draw Sova character
@@ -852,12 +901,6 @@ function drawScene() {
     if (bomb.planted) {
         drawRect(bomb);
     }
-
-    // Draw defenders
-    gameState.defenders.forEach(defender => {
-        drawRect(defender);
-        drawHealthBar(defender);
-    });
 
     // Draw arrows
     gameState.arrows.forEach(arrow => {
