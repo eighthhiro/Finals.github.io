@@ -1,12 +1,237 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
 body {
-    margin: 0;
-    background-color: #0f0f0f;
-    overflow: hidden;
-  }
-  
-  #gameCanvas {
-    display: block;
-    width: 100vw;
-    height: 100vh;
-  }
-  
+  background-color: #0f1923;
+  color: #ffffff;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+#lobby {
+  background-image: url('assets/valorant_bg.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px;
+  position: relative;
+}
+
+.title-container {
+  text-align: center;
+  margin-top: 100px;
+}
+
+h1 {
+  font-size: 4rem;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 65, 77, 0.8);
+  margin-bottom: 30px;
+  letter-spacing: 4px;
+}
+
+h2 {
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.glow-button {
+  background-color: #ff414d;
+  color: white;
+  border: none;
+  padding: 15px 50px;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 65, 77, 0.8);
+  letter-spacing: 2px;
+}
+
+.glow-button:hover {
+  background-color: #ff6b76;
+  box-shadow: 0 0 25px rgba(255, 65, 77, 1);
+  transform: scale(1.05);
+}
+
+.menu-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.menu-buttons button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 30px;
+  font-size: 1.2rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hidden {
+  display: none !important;
+}
+
+#levelSelect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(15, 25, 35, 0.9);
+  padding: 30px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 900px;
+  text-align: center;
+}
+
+.levels-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.level {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  border-radius: 5px;
+  width: 160px;
+  transition: all 0.3s ease;
+}
+
+.level:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-5px);
+}
+
+.stars {
+  margin: 10px 0;
+  font-size: 1.5rem;
+  color: #c4c4c4;
+}
+
+.star.filled {
+  color: #ffdd00;
+}
+
+.play-level-btn {
+  background-color: #ff414d;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-level-btn:hover {
+  background-color: #ff6b76;
+}
+
+#backToMain {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#backToMain:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(15, 25, 35, 0.9);
+  padding: 30px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.stats-content, .help-content {
+  text-align: left;
+  margin: 20px 0;
+  font-size: 1.2rem;
+  line-height: 2;
+}
+
+.close-panel {
+  background-color: #ff414d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.close-panel:hover {
+  background-color: #ff6b76;
+}
+
+#gameContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+}
+
+#hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+#levelInfo, #enemiesLeft {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 1.2rem;
+}
+
+#returnToLobby {
+  background-color: #ff414d;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 3px;
+  cursor: pointer;
+}

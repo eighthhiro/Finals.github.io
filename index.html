@@ -1,14 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sova Archery</title>
-  <link rel="icon" href="assets/val.png" type="image/x-icon">
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shak Dart</title>
+    <link rel="icon" href="./assets/val.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: system-ui, sans-serif;
+            background-color: #0f1923;
+            color: #ffffff;
+        }
+        
+        #lobby img{
+          z-index: -10;
+          margin: 0;
+          top: 0;
+          left: 0;
+          position: absolute;
+          width: 100%;
+          opacity: 0.5;
+          
+        }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0f1923;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ff414d;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <canvas id="gameCanvas"></canvas>
-  <script src="script.js"></script>
+    <div id="loading">
+        <div class="loader"></div>
+        <p>Loading game assets...</p>
+    </div>
+    
+    <div id="lobby">
+      <img src="./assets/Lobby.jpg">
+        <div class="title-container">
+            <h1>SOVA'S ARCHERY CHALLENGE</h1>
+            <button id="playButton" class="glow-button">PLAY</button>
+        </div>
+
+        <div id="levelSelect" class="hidden">
+            <h2>SELECT LEVEL</h2>
+            <div class="levels-container">
+                <div class="level" data-level="1">
+                    <h3>LEVEL 1</h3>
+                    <div class="stars">
+                        <span class="star filled">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                    <button class="play-level-btn">PLAY</button>
+                </div>
+                <div class="level" data-level="2">
+                    <h3>LEVEL 2</h3>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                    <button class="play-level-btn">PLAY</button>
+                </div>
+                <div class="level" data-level="3">
+                    <h3>LEVEL 3</h3>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                    <button class="play-level-btn">PLAY</button>
+                </div>
+                <div class="level" data-level="4">
+                    <h3>LEVEL 4</h3>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                    <button class="play-level-btn">PLAY</button>
+                </div>
+                <div class="level" data-level="5">
+                    <h3>LEVEL 5</h3>
+                    <div class="stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                    <button class="play-level-btn">PLAY</button>
+                </div>
+            </div>
+            <button id="backToMain">BACK</button>
+        </div>
+
+        <div class="menu-buttons">
+            <button id="statsButton">STATS</button>
+            <button id="helpButton">HELP</button>
+        </div>
+
+        <div id="statsPanel" class="panel hidden">
+            <h2>PLAYER STATS</h2>
+            <div class="stats-content">
+                <p>Arrows Fired: <span id="arrowsFired">0</span></p>
+                <p>Enemies Defeated: <span id="enemiesDefeated">0</span></p>
+                <p>Accuracy: <span id="accuracy">0%</span></p>
+                <p>Highest Level: <span id="highestLevel">1</span></p>
+                <p>Total Stars: <span id="totalStars">1</span>/15</p>
+            </div>
+            <button class="close-panel">CLOSE</button>
+        </div>
+
+        <div id="helpPanel" class="panel hidden">
+            <h2>HOW TO PLAY</h2>
+            <div class="help-content">
+                <p>• Click and drag from Sova to aim and release to shoot arrows</p>
+                <p>• Defeat all defenders before they defuse the spike</p>
+                <p>• Headshots deal more damage</p>
+                <p>• Earn stars based on accuracy and speed</p>
+            </div>
+            <button class="close-panel">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="gameContainer" class="hidden">
+        <canvas id="gameCanvas"></canvas>
+        <div id="hud">
+            <div id="levelInfo">LEVEL: <span id="currentLevel">1</span></div>
+            <div id="enemiesLeft">ENEMIES: <span id="enemyCount">1</span></div>
+            <button id="returnToLobby">MENU</button>
+        </div>
+    </div>
+
+    <script>
+        // Handle loading screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loading').style.display = 'none';
+            }, 1500);
+        });
+    </script>
+    
+    <!-- First load the lobby script -->
+    <script src="lobby.js"></script>
+    
+    <!-- Then load the game script as a module -->
+    <script src="game.js"></script>
 </body>
 </html>
