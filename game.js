@@ -12,7 +12,6 @@ let gameState = {
     lastSpawnTime: 0,
     spawnDelay: 1000, // 1 second between spawns
     levelConfigs: {
-        // Level configs remain unchanged
         1: { 
             defenders: [
                 { x: 900, y: 0, hp: 100, speed: 1.5 }

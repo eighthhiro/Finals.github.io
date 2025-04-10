@@ -9,8 +9,14 @@
 </head>
 <body>
     <div id="loading">
-        <div class="loader"></div>
-        <p>Loading game assets...</p>
+        <div id="loadingContent">
+            <div class="headphones-notice">
+              <div class="headphones-icon">🎧</div>
+              <p>Use headphones for better experience</p>
+              <button id="confirmSound">Roger!</button>
+            </div>
+          </div>        
+        <audio id="loadingSound" src="./audio/sfx/loading-screen-sound.mp3" preload="auto"></audio>
     </div>
     
     <div id="lobby">
@@ -170,10 +176,30 @@
 
     <script>
         // Handle loading screen
-        window.addEventListener('load', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingElement = document.getElementById('loading');
+            const confirmButton = document.getElementById('confirmSound');
+            const loadingSound = document.getElementById('loadingSound');
+            
+            // Show loading screen immediately
+            loadingElement.style.display = 'flex';
+            
+            confirmButton.addEventListener('click', function() {
+            // Play sound when user clicks OK
+            loadingSound.play().then(() => {
+                console.log("Audio playback started");
+            }).catch(e => {
+                console.error("Audio playback failed:", e);
+            });
+            
+            // Remove the headphones notice
+            document.querySelector('.headphones-notice').style.display = 'none';
+            
+            // Hide loading screen after delay
             setTimeout(function() {
-                document.getElementById('loading').style.display = 'none';
-            }, 1500);
+                loadingElement.style.display = 'none';
+            }, 8000);
+            });
         });
     </script>
     <script src="./lobby.js"></script>
