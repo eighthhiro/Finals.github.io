@@ -76,6 +76,18 @@ let gameState = {
                 { x: 550, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' }
             ]
+        },
+        6: { 
+            defenders: [
+                { x: 1200, y: 0, hp: 100, speed: 1.5 },
+                { x: 1200, y: 0, hp: 100, speed: 1.5 }
+            ],
+            bomb: { x: 500, y: 0, defuseTime: 8000 },
+            obstacles: [
+                { x: 450, width: 60, height: 60, type: 'box' },
+                { x: 550, width: 60, height: 60, type: 'box' },
+                { x: 550, width: 60, height: 60, type: 'box' }
+            ]
         }
     }
 };
@@ -92,7 +104,7 @@ let images = {};
 // Load all images
 function loadImages() {
     const imageList = {
-        background: "assets/bg.png",
+        background: "assets/valo bg.jpg",
         sova: "assets/Sova-Standing.png",
         arrow: "assets/Arrow.png",
         spike: "assets/Spike.png",

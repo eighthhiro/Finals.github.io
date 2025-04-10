@@ -3,60 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shak Dart</title>
+    <title>Sova's Archery Challenge</title>
     <link rel="icon" href="./assets/val.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: system-ui, sans-serif;
-            background-color: #0f1923;
-            color: #ffffff;
-        }
-        
-        #lobby img{
-          z-index: -10;
-          margin: 0;
-          top: 0;
-          left: 0;
-          position: absolute;
-          width: 100%;
-          opacity: 0.5;
-          
-        }
-
-        #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0f1923;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        
-
-        .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #ff414d;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 2s linear infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <div id="loading">
@@ -65,99 +14,157 @@
     </div>
     
     <div id="lobby">
-      <img src="./assets/Lobby.jpg">
-        <div class="title-container">
-            <h1>SOVA'S ARCHERY CHALLENGE</h1>
-            <button id="playButton" class="glow-button">PLAY</button>
+        <!-- Video Background Placeholder -->
+        <video id="video-background" autoplay muted loop>
+            <source src="./assets/Home.mp4" type="video/mp4">
+            <!-- Fallback image if video doesn't load -->
+            <img src="./assets/Lobby.png" alt="Lobby Background">
+        </video>
+
+        <!-- Navbar -->
+        <div class="navbar">
+            <img src="./assets/val.png" alt="Sova's Archery" class="navbar-logo">
+            <div class="navbar-links">
+                <div id="homeLink" class="navbar-link active">HOME</div>
+                <div id="statsButton" class="navbar-link">STATS</div>
+                <div id="helpButton" class="navbar-link">HELP</div>
+                <div id="settingsLink" class="navbar-link">SETTINGS</div>
+            </div>
         </div>
 
-        <div id="levelSelect" class="hidden">
-            <h2>SELECT LEVEL</h2>
-            <div class="levels-container">
-                <div class="level" data-level="1">
-                    <h3>LEVEL 1</h3>
-                    <div class="stars">
-                        <span class="star filled">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                    </div>
-                    <button class="play-level-btn">PLAY</button>
+        <!-- Main Content -->
+        <div class="play-button-container">
+            <button id="playButton" class="valorant-play-button">PLAY</button>
+        </div>
+
+        <!-- Ranks System (Initially Hidden) -->
+        <div id="rankSystem" class="hidden">
+            <!-- Added video container for rank selection -->
+            <div class="rank-video-container">
+                <video id="rank-video-background" autoplay muted loop>
+                    <source src="./assets/Play-Lobby.mp4" type="video/mp4">
+                    <img src="./assets/Rank-Selection.png" alt="Rank Selection Background">
+                </video>
+            </div>
+            
+            <div class="rank-list">
+                <!-- Iron Group Header -->
+                <div class="rank-group-header">
+                    <div class="rank-group-icon" style="background-image: url('./assets/ranks/iron.png');"></div>
+                    <div class="rank-group-name">IRON</div>
                 </div>
-                <div class="level" data-level="2">
-                    <h3>LEVEL 2</h3>
-                    <div class="stars">
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
+                
+                <!-- Iron Levels -->
+                <div class="rank-item active" data-level="1" data-points="20" data-unlocked="true" data-image="iron1">
+                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron1.png');"></div>
+                    <div class="rank-details">
+                        <div class="rank-name">Level 1</div>
+                        <div class="rank-points">0/20 PTS</div>
                     </div>
-                    <button class="play-level-btn">PLAY</button>
                 </div>
-                <div class="level" data-level="3">
-                    <h3>LEVEL 3</h3>
-                    <div class="stars">
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
+                <div class="rank-item" data-level="2" data-points="20" data-unlocked="false" data-image="iron1">
+                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron1.png');"></div>
+                    <div class="rank-details">
+                        <div class="rank-name">Level 2</div>
+                        <div class="rank-points">0/20 PTS</div>
                     </div>
-                    <button class="play-level-btn">PLAY</button>
                 </div>
-                <div class="level" data-level="4">
-                    <h3>LEVEL 4</h3>
-                    <div class="stars">
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
+                <div class="rank-item locked" data-level="3" data-points="20" data-unlocked="false" data-image="iron2">
+                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron2.png');"></div>
+                    <div class="rank-details">
+                        <div class="rank-name">Level 3</div>
+                        <div class="rank-points">0/20 PTS</div>
                     </div>
-                    <button class="play-level-btn">PLAY</button>
                 </div>
-                <div class="level" data-level="5">
-                    <h3>LEVEL 5</h3>
-                    <div class="stars">
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
+                <div class="rank-item locked" data-level="4" data-points="20" data-unlocked="false" data-image="iron2">
+                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron2.png');"></div>
+                    <div class="rank-details">
+                        <div class="rank-name">Level 4</div>
+                        <div class="rank-points">0/20 PTS</div>
                     </div>
-                    <button class="play-level-btn">PLAY</button>
+                </div>
+                <div class="rank-item locked" data-level="5" data-points="10" data-unlocked="false" data-image="iron3">
+                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron3.png');"></div>
+                    <div class="rank-details">
+                        <div class="rank-name">Level 5</div>
+                        <div class="rank-points">0/10 PTS</div>
+                    </div>
+                </div>
+                <div class="rank-item locked" data-level="6" data-points="10" data-unlocked="false" data-image="iron3">
+                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron3.png');"></div>
+                    <div class="rank-details">
+                        <div class="rank-name">Level 6</div>
+                        <div class="rank-points">0/10 PTS</div>
+                    </div>
+                </div>
+                
+                <!-- Bronze Group Header for future expansion -->
+                <div class="rank-group-header">
+                    <div class="rank-group-icon" style="background-image: url('./assets/ranks/bronze.png');"></div>
+                    <div class="rank-group-name">BRONZE</div>
+                </div>
+                
+                <!-- Placeholder for future Bronze levels -->
+                <div class="rank-item locked" data-level="6" data-points="20" data-unlocked="false">
+                    <div class="rank-icon" style="background-image: url('./assets/ranks/bronze.png');"></div>
+                    <div class="rank-details">
+                        <div class="rank-name">Level 1</div>
+                        <div class="rank-points">0/20 PTS</div>
+                    </div>
                 </div>
             </div>
-            <button id="backToMain">BACK</button>
+            
+            <div class="rank-display">
+                <div class="rank-preview" style="background-image: url('./assets/ranks/iron.png');"></div>
+                <h2 class="rank-title">IRON - LEVEL 1</h2>
+                <p class="rank-description">The first step in Sova's Archery Challenge. Master the basics of bow control to progress to more challenging levels. Every shot counts.</p>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>0 PTS</span>
+                        <span>20 PTS NEEDED</span>
+                    </div>
+                </div>
+                <button class="play-level-btn" data-level="1">START CHALLENGE</button>
+            </div>
         </div>
 
-        <div class="menu-buttons">
-            <button id="statsButton">STATS</button>
-            <button id="helpButton">HELP</button>
-        </div>
-
+        <!-- Stats Panel -->
         <div id="statsPanel" class="panel hidden">
             <h2>PLAYER STATS</h2>
             <div class="stats-content">
                 <p>Arrows Fired: <span id="arrowsFired">0</span></p>
                 <p>Enemies Defeated: <span id="enemiesDefeated">0</span></p>
                 <p>Accuracy: <span id="accuracy">0%</span></p>
-                <p>Highest Level: <span id="highestLevel">1</span></p>
-                <p>Total Stars: <span id="totalStars">1</span>/15</p>
+                <p>Highest Rank: <span id="highestRank">IRON I</span></p>
+                <p>Total Points: <span id="totalPoints">0</span>/100</p>
             </div>
-            <button class="close-panel">CLOSE</button>
+            <button class="close-panel valorant-button">CLOSE</button>
         </div>
 
+        <!-- Help Panel -->
         <div id="helpPanel" class="panel hidden">
             <h2>HOW TO PLAY</h2>
             <div class="help-content">
                 <p>• Click and drag from Sova to aim and release to shoot arrows</p>
                 <p>• Defeat all defenders before they defuse the spike</p>
                 <p>• Headshots deal more damage</p>
-                <p>• Earn stars based on accuracy and speed</p>
+                <p>• Earn points based on accuracy and speed</p>
+                <p>• Collect 100 points to rank up to the next level</p>
             </div>
-            <button class="close-panel">CLOSE</button>
+            <button class="close-panel valorant-button">CLOSE</button>
         </div>
     </div>
 
+    <!-- Game Container -->
     <div id="gameContainer" class="hidden">
         <canvas id="gameCanvas"></canvas>
         <div id="hud">
-            <div id="levelInfo">LEVEL: <span id="currentLevel">1</span></div>
+            <div id="levelInfo">RANK: <span id="currentLevel">IRON I</span></div>
             <div id="enemiesLeft">ENEMIES: <span id="enemyCount">1</span></div>
-            <button id="returnToLobby">MENU</button>
+            <button id="returnToLobby" class="valorant-button">MENU</button>
         </div>
     </div>
 
@@ -169,11 +176,7 @@
             }, 1500);
         });
     </script>
-    
-    <!-- First load the lobby script -->
-    <script src="lobby.js"></script>
-    
-    <!-- Then load the game script as a module -->
-    <script src="game.js"></script>
+    <script src="./lobby.js"></script>
+    <script type="module" src="./game.js"></script>
 </body>
 </html>
