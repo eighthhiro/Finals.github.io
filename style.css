@@ -282,12 +282,13 @@ body {
 
 /* Rank Item */
 .rank-item {
-  padding: 15px 20px 15px 30px; /* Increased left padding for hierarchy */
+  padding: 15px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .rank-item:hover, .rank-item.active {
@@ -296,12 +297,21 @@ body {
 
 .rank-item.active {
   border-left: 4px solid #ff414d;
-  padding-left: 26px; /* Adjusted to account for the border */
+  padding-left: 16px; /* Adjusted to account for the border */
 }
 
 .rank-item.locked {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.rank-left {
+  display: flex;
+  align-items: center;
+}
+
+.rank-right {
+  text-align: right;
 }
 
 .rank-icon {
@@ -313,20 +323,29 @@ body {
   background-position: center;
 }
 
-.rank-details {
-  flex: 1;
+.rank-name-level {
+  display: flex;
+  flex-direction: column;
 }
 
 .rank-name {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   letter-spacing: 1px;
-  margin-bottom: 5px;
   text-transform: uppercase;
+  color: #ffffff;
+  font-weight: bold;
 }
 
-.rank-points {
+.rank-level-info {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+.rank-rr {
   font-size: 0.9rem;
   color: #8b978f;
+  font-weight: bold;
 }
 
 .rank-display {
@@ -346,14 +365,22 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .rank-title {
   font-size: 3.5rem;
   letter-spacing: 2px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   text-transform: uppercase;
+  text-align: center;
+}
+
+.rank-subtitle {
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.8);
   text-align: center;
 }
 
@@ -443,11 +470,100 @@ body {
   text-transform: uppercase;
 }
 
-.stats-content, .help-content {
+.stats-content, .help-content, .settings-content {
   text-align: left;
   margin: 20px 0;
   font-size: 1.2rem;
   line-height: 2;
+}
+
+/* Settings Panel */
+.settings-content {
+  padding: 20px;
+  color: #fff;
+}
+
+.setting-item {
+  margin-bottom: 20px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #ff4655;
+}
+
+.setting-item input[type="range"] {
+  width: 100%;
+  height: 5px;
+  background: #333;
+  outline: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.setting-item input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #ff4655;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#volumeValue {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.danger {
+  background-color: #ff4655;
+  color: white;
+}
+
+.danger:hover {
+  background-color: #e03e4c;
+}
+
+.safe{
+  background-color: #707070 !important;
+  color: white;
+}
+
+.safe:hover{
+  background-color: #646464;
+}
+
+/* Confirmation Dialog */
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 400px;
+  text-align: center;
+  border: 1px solid #ff4655;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .valorant-button {

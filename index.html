@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sova's Archery Challenge</title>
+    <title>Sova</title> 
     <link rel="icon" href="./assets/val.png" type="image/x-icon">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+
+<!-- Audio Elements -->
+<audio id="lobbyMusic" src="./audio/music/lobby-music.mp3" loop preload="auto"></audio>
+<audio id="rankMusic" src="./audio/music/rank-music.mp3" loop preload="auto"></audio>
+<audio id="loadingSound" src="./audio/sfx/loading-screen-sound.mp3" preload="auto"></audio>
+    
     <div id="loading">
         <div id="loadingContent">
             <div class="headphones-notice">
@@ -16,7 +22,6 @@
               <button id="confirmSound">Roger!</button>
             </div>
           </div>        
-        <audio id="loadingSound" src="./audio/sfx/loading-screen-sound.mp3" preload="auto"></audio>
     </div>
     
     <div id="lobby">
@@ -59,78 +64,118 @@
                     <div class="rank-group-icon" style="background-image: url('./assets/ranks/iron.png');"></div>
                     <div class="rank-group-name">IRON</div>
                 </div>
-                
-                <!-- Iron Levels -->
-                <div class="rank-item active" data-level="1" data-points="20" data-unlocked="true" data-image="iron1">
-                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron1.png');"></div>
-                    <div class="rank-details">
-                        <div class="rank-name">Level 1</div>
-                        <div class="rank-points">0/20 PTS</div>
+
+                <!-- Iron 1 (Levels 1-2) -->
+                <div class="rank-item active" data-level="1" data-rr="0" data-unlocked="true" data-image="iron1" data-tier="Iron 1">
+                    <div class="rank-left">
+                        <div class="rank-icon" style="background-image: url('./assets/ranks/iron1.png');"></div>
+                        <div class="rank-name-level">
+                            <div class="rank-name">IRON 1</div>
+                            <div class="rank-level-info">Level 1</div>
+                        </div>
+                    </div>
+                    <div class="rank-right">
+                        <div class="rank-rr">0/50 RR</div>
                     </div>
                 </div>
-                <div class="rank-item" data-level="2" data-points="20" data-unlocked="false" data-image="iron1">
-                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron1.png');"></div>
-                    <div class="rank-details">
-                        <div class="rank-name">Level 2</div>
-                        <div class="rank-points">0/20 PTS</div>
+                <div class="rank-item" data-level="2" data-rr="0" data-unlocked="false" data-image="iron1" data-tier="Iron 1">
+                    <div class="rank-left">
+                        <div class="rank-icon" style="background-image: url('./assets/ranks/iron1.png');"></div>
+                        <div class="rank-name-level">
+                            <div class="rank-name">IRON 1</div>
+                            <div class="rank-level-info">Level 2</div>
+                        </div>
+                    </div>
+                    <div class="rank-right">
+                        <div class="rank-rr">0/50 RR</div>
                     </div>
                 </div>
-                <div class="rank-item locked" data-level="3" data-points="20" data-unlocked="false" data-image="iron2">
-                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron2.png');"></div>
-                    <div class="rank-details">
-                        <div class="rank-name">Level 3</div>
-                        <div class="rank-points">0/20 PTS</div>
+
+                <!-- Iron 2 (Levels 3-4) -->
+                <div class="rank-item locked" data-level="3" data-rr="0" data-unlocked="false" data-image="iron2" data-tier="Iron 2">
+                    <div class="rank-left">
+                        <div class="rank-icon" style="background-image: url('./assets/ranks/iron2.png');"></div>
+                        <div class="rank-name-level">
+                            <div class="rank-name">IRON 2</div>
+                            <div class="rank-level-info">Level 3</div>
+                        </div>
+                    </div>
+                    <div class="rank-right">
+                        <div class="rank-rr">0/50 RR</div>
                     </div>
                 </div>
-                <div class="rank-item locked" data-level="4" data-points="20" data-unlocked="false" data-image="iron2">
-                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron2.png');"></div>
-                    <div class="rank-details">
-                        <div class="rank-name">Level 4</div>
-                        <div class="rank-points">0/20 PTS</div>
+                <div class="rank-item locked" data-level="4" data-rr="0" data-unlocked="false" data-image="iron2" data-tier="Iron 2">
+                    <div class="rank-left">
+                        <div class="rank-icon" style="background-image: url('./assets/ranks/iron2.png');"></div>
+                        <div class="rank-name-level">
+                            <div class="rank-name">IRON 2</div>
+                            <div class="rank-level-info">Level 4</div>
+                        </div>
+                    </div>
+                    <div class="rank-right">
+                        <div class="rank-rr">0/50 RR</div>
                     </div>
                 </div>
-                <div class="rank-item locked" data-level="5" data-points="10" data-unlocked="false" data-image="iron3">
-                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron3.png');"></div>
-                    <div class="rank-details">
-                        <div class="rank-name">Level 5</div>
-                        <div class="rank-points">0/10 PTS</div>
+
+                <!-- Iron 3 (Levels 5-6) -->
+                <div class="rank-item locked" data-level="5" data-rr="0" data-unlocked="false" data-image="iron3" data-tier="Iron 3">
+                    <div class="rank-left">
+                        <div class="rank-icon" style="background-image: url('./assets/ranks/iron3.png');"></div>
+                        <div class="rank-name-level">
+                            <div class="rank-name">IRON 3</div>
+                            <div class="rank-level-info">Level 5</div>
+                        </div>
+                    </div>
+                    <div class="rank-right">
+                        <div class="rank-rr">0/50 RR</div>
                     </div>
                 </div>
-                <div class="rank-item locked" data-level="6" data-points="10" data-unlocked="false" data-image="iron3">
-                    <div class="rank-icon" style="background-image: url('./assets/ranks/iron3.png');"></div>
-                    <div class="rank-details">
-                        <div class="rank-name">Level 6</div>
-                        <div class="rank-points">0/10 PTS</div>
+                <div class="rank-item locked" data-level="6" data-rr="0" data-unlocked="false" data-image="iron3" data-tier="Iron 3">
+                    <div class="rank-left">
+                        <div class="rank-icon" style="background-image: url('./assets/ranks/iron3.png');"></div>
+                        <div class="rank-name-level">
+                            <div class="rank-name">IRON 3</div>
+                            <div class="rank-level-info">Level 6</div>
+                        </div>
+                    </div>
+                    <div class="rank-right">
+                        <div class="rank-rr">0/50 RR</div>
                     </div>
                 </div>
-                
+
                 <!-- Bronze Group Header for future expansion -->
                 <div class="rank-group-header">
                     <div class="rank-group-icon" style="background-image: url('./assets/ranks/bronze.png');"></div>
                     <div class="rank-group-name">BRONZE</div>
                 </div>
-                
+
                 <!-- Placeholder for future Bronze levels -->
-                <div class="rank-item locked" data-level="6" data-points="20" data-unlocked="false">
-                    <div class="rank-icon" style="background-image: url('./assets/ranks/bronze.png');"></div>
-                    <div class="rank-details">
-                        <div class="rank-name">Level 1</div>
-                        <div class="rank-points">0/20 PTS</div>
+                <div class="rank-item locked" data-level="7" data-rr="0" data-unlocked="false" data-image="bronze1" data-tier="Bronze 1">
+                    <div class="rank-left">
+                        <div class="rank-icon" style="background-image: url('./assets/ranks/bronze1.png');"></div>
+                        <div class="rank-name-level">
+                            <div class="rank-name">BRONZE 1</div>
+                            <div class="rank-level-info">Level 7</div>
+                        </div>
+                    </div>
+                    <div class="rank-right">
+                        <div class="rank-rr">0/50 RR</div>
                     </div>
                 </div>
             </div>
             
             <div class="rank-display">
-                <div class="rank-preview" style="background-image: url('./assets/ranks/iron.png');"></div>
-                <h2 class="rank-title">IRON - LEVEL 1</h2>
+                <div class="rank-preview" style="background-image: url('./assets/ranks/iron1.png');"></div>
+                <h2 class="rank-title">IRON 1</h2>
+                <h3 class="rank-subtitle">LEVEL 1</h3>
                 <p class="rank-description">The first step in Sova's Archery Challenge. Master the basics of bow control to progress to more challenging levels. Every shot counts.</p>
                 <div class="progress-container">
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 0%;"></div>
                     </div>
                     <div class="progress-text">
-                        <span>0 PTS</span>
-                        <span>20 PTS NEEDED</span>
+                        <span>0 RR</span>
+                        <span>50 RR NEEDED</span>
                     </div>
                 </div>
                 <button class="play-level-btn" data-level="1">START CHALLENGE</button>
@@ -164,6 +209,34 @@
         </div>
     </div>
 
+    <!-- Settings Panel -->
+    <div id="settingsPanel" class="panel hidden">
+        <h2>SETTINGS</h2>
+        <div class="settings-content">
+            <div class="setting-item">
+                <label for="volumeControl">MASTER VOLUME</label>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+                <span id="volumeValue">100%</span>
+            </div>
+            <div class="setting-item">
+                <button id="resetProgress" class="valorant-button danger">RESET PROGRESS</button>
+            </div>
+        </div>
+        <button class="close-panel valorant-button">CLOSE</button>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmationDialog" class="dialog hidden">
+        <div class="dialog-content">
+            <h3>RESET PROGRESS</h3>
+            <p>Are you sure you want to reset all progress? This cannot be undone.</p>
+            <div class="dialog-buttons">
+                <button id="confirmReset" class="valorant-button danger">CONFIRM</button>
+                <button id="cancelReset" class="valorant-button safe">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Game Container -->
     <div id="gameContainer" class="hidden">
         <canvas id="gameCanvas"></canvas>
@@ -174,35 +247,16 @@
         </div>
     </div>
 
-    <script>
-        // Handle loading screen
-        document.addEventListener('DOMContentLoaded', function() {
-            const loadingElement = document.getElementById('loading');
-            const confirmButton = document.getElementById('confirmSound');
-            const loadingSound = document.getElementById('loadingSound');
-            
-            // Show loading screen immediately
-            loadingElement.style.display = 'flex';
-            
-            confirmButton.addEventListener('click', function() {
-            // Play sound when user clicks OK
-            loadingSound.play().then(() => {
-                console.log("Audio playback started");
-            }).catch(e => {
-                console.error("Audio playback failed:", e);
-            });
-            
-            // Remove the headphones notice
-            document.querySelector('.headphones-notice').style.display = 'none';
-            
-            // Hide loading screen after delay
-            setTimeout(function() {
-                loadingElement.style.display = 'none';
-            }, 8000);
-            });
-        });
-    </script>
-    <script src="./lobby.js"></script>
+    <!-- JAVASCRIPT LINKS-->
+
+    <!-- Loading and Lobby Sounds-->
+    <script src="./lobby-handler.js"></script>
+
+    <!-- Lobby and Rank Interface -->
+    <script src="./lobby-ui.js"></script>
+
+    <!-- Game Renderer -->
     <script type="module" src="./game.js"></script>
+
 </body>
 </html>

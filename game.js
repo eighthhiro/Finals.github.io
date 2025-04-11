@@ -7,16 +7,16 @@ let gameState = {
     arrowsFired: 0,
     enemiesDefeated: 0,
     startTime: null,
-    damageTexts: [], // Initialize damageTexts array here
+    damageTexts: [],
     defenderSpawnTimes: [],
     lastSpawnTime: 0,
-    spawnDelay: 1000, // 1 second between spawns
+    spawnDelay: 1000,
     levelConfigs: {
         1: { 
             defenders: [
                 { x: 900, y: 0, hp: 100, speed: 1.5 }
             ],
-            bomb: { x: 500, y: 0, defuseTime: 8000 },
+            bomb: { x: 500, y: 0, defuseTime: 7000 },
             obstacles: [
                 { x: 420, width: 60, height: 60, type: 'box' }
             ]
@@ -26,7 +26,7 @@ let gameState = {
                 { x: 1200, hp: 100, speed: 1.5 },
                 { x: 1200, hp: 100, speed: 1.5 }
             ],
-            bomb: { x: 700, y: 0, defuseTime: 8000 },
+            bomb: { x: 700, y: 0, defuseTime: 7000 },
             obstacles: [
                 { x: 520, width: 60, height: 60, type: 'box' },
                 { x: 520, width: 60, height: 60, type: 'box' }
@@ -38,7 +38,7 @@ let gameState = {
                 { x: 1200, hp: 150, speed: 1.5 },
                 { x: 1200, hp: 150, speed: 1.5 }
             ],
-            bomb: { x: 700, y: 0, defuseTime: 8000 },
+            bomb: { x: 700, y: 0, defuseTime: 7000 },
             obstacles: [
                 { x: 450, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' },
@@ -52,7 +52,7 @@ let gameState = {
                 { x: 1200, y: 0, hp: 100, speed: 1.5 },
                 { x: 1200, y: 0, hp: 100, speed: 1.5 }
             ],
-            bomb: { x: 600, y: 0, defuseTime: 8000 },
+            bomb: { x: 600, y: 0, defuseTime: 7000 },
             obstacles: [
                 { x: 450, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' },
@@ -69,7 +69,7 @@ let gameState = {
                 { x: 1200, y: 0, hp: 100, speed: 1.5 },
                 { x: 1200, y: 0, hp: 100, speed: 1.5 }
             ],
-            bomb: { x: 500, y: 0, defuseTime: 8000 },
+            bomb: { x: 500, y: 0, defuseTime: 7000 },
             obstacles: [
                 { x: 450, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' },
@@ -81,7 +81,7 @@ let gameState = {
                 { x: 1200, y: 0, hp: 100, speed: 1.5 },
                 { x: 1200, y: 0, hp: 100, speed: 1.5 }
             ],
-            bomb: { x: 500, y: 0, defuseTime: 8000 },
+            bomb: { x: 500, y: 0, defuseTime: 7000 },
             obstacles: [
                 { x: 450, width: 60, height: 60, type: 'box' },
                 { x: 550, width: 60, height: 60, type: 'box' },
@@ -138,22 +138,16 @@ function loadImages() {
 
 // Initialize game
 window.initGame = async function(level) {
-    // Don't initialize if already running
     if (gameState.isRunning) return;
     
-    // Set up canvas
     canvas = document.getElementById('gameCanvas');
     ctx = canvas.getContext('2d');
-    
-    // Resize canvas
     resizeCanvas();
     
-    // Load images if not already loaded
     if (Object.keys(images).length === 0) {
         await loadImages();
     }
     
-    // Setup game state
     gameState.isRunning = true;
     gameState.arrows = [];
     gameState.damageTexts = [];
@@ -162,16 +156,10 @@ window.initGame = async function(level) {
     gameState.enemiesDefeated = 0;
     gameState.startTime = Date.now();
     
-    // Initialize game elements
     initializeLevel(level);
-    
-    // Set up event listeners
     setupEventListeners();
-    
-    // Start game loop
     drawScene();
     
-    // Update enemy count in HUD
     document.getElementById('enemyCount').textContent = gameState.defenders.length;
 };
 
@@ -180,22 +168,22 @@ window.stopGame = function() {
     if (!gameState.isRunning) return;
     
     gameState.isRunning = false;
-    
-    // Remove event listeners
     removeEventListeners();
     
-    // Stop animation loop
     if (animationId) {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
+    
+    gameState.arrows = [];
+    gameState.defenders = [];
+    gameState.damageTexts = [];
 };
 
-// Initialize level based on configuration
+// Initialize level
 function initializeLevel(level) {
     const config = gameState.levelConfigs[level];
     
-    // Setup ground
     ground = {
         x: 0,
         y: canvas.height - 80,
@@ -204,7 +192,6 @@ function initializeLevel(level) {
         color: 'rgba(46, 46, 46)'
     };
     
-    // Setup Sova character
     sova = {
         x: 100,
         y: canvas.height - 200,
@@ -214,7 +201,6 @@ function initializeLevel(level) {
         image: images.sova
     };
     
-    // Setup bomb/spike
     bomb = {
         x: config.bomb.x,
         y: canvas.height - 120,
@@ -229,13 +215,10 @@ function initializeLevel(level) {
     };
     
     obstacles = [];
-    let previousBoxes = []; // Track boxes at each x position
+    let previousBoxes = [];
 
     config.obstacles.forEach(obstacle => {
-        // Find all boxes at this x position that we've already placed
         const boxesAtThisX = previousBoxes.filter(b => b.x === obstacle.x);
-        
-        // Calculate total height of boxes already at this x position
         const totalHeight = boxesAtThisX.reduce((sum, box) => sum + box.height, 0);
         
         const newBox = {
@@ -249,29 +232,13 @@ function initializeLevel(level) {
         };
         
         obstacles.push(newBox);
-        previousBoxes.push(newBox); // Add to our tracking list
+        previousBoxes.push(newBox);
     });
     
-    // Setup defenders
-    gameState.defenders = config.defenders.map(def => ({
-        x: def.x,
-        y: canvas.height - 80 - 130,
-        width: 92,
-        height: 95,
-        hp: def.hp,
-        color: 'purple',
-        speed: def.speed,
-        defusing: false,
-        defuseStartTime: null,
-        targetX: 0,
-        targetY: 0,
-        image: images.sage,
-        onGround: true
-    }));
     gameState.defenders = [];
     gameState.defenderSpawnTimes = config.defenders.map((def, index) => ({
         config: def,
-        spawnTime: index * gameState.spawnDelay // Staggered spawning
+        spawnTime: index * gameState.spawnDelay
     }));
     gameState.lastSpawnTime = Date.now();
 }
@@ -295,7 +262,6 @@ function resizeCanvas() {
     }
     
     if (obstacles.length > 0) {
-        // Recalculate box stacking on resize
         let previousBoxes = [];
         obstacles.forEach(obstacle => {
             const boxesAtThisX = previousBoxes.filter(b => b.x === obstacle.x);
@@ -307,15 +273,14 @@ function resizeCanvas() {
     
     if (gameState.defenders.length > 0) {
         gameState.defenders.forEach(defender => {
-            defender.y = canvas.height - 80 - 120; //
+            defender.y = canvas.height - 80 - 120;
         });
     }
 }
 
-// Setup event listeners
+// Event listeners
 function setupEventListeners() {
     window.addEventListener('resize', resizeCanvas);
-    
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseup', handleMouseUp);
@@ -324,10 +289,8 @@ function setupEventListeners() {
     canvas.addEventListener('touchend', handleTouchEnd);
 }
 
-// Remove event listeners
 function removeEventListeners() {
     window.removeEventListener('resize', resizeCanvas);
-    
     canvas.removeEventListener('mousedown', handleMouseDown);
     canvas.removeEventListener('mousemove', handleMouseMove);
     canvas.removeEventListener('mouseup', handleMouseUp);
@@ -370,7 +333,6 @@ function handleMouseUp() {
     currentPoint = null;
 }
 
-// Touch event handlers for mobile support
 function handleTouchStart(e) {
     e.preventDefault();
     const rect = canvas.getBoundingClientRect();
@@ -435,25 +397,20 @@ function drawRect(obj) {
 }
 
 function drawHealthBar(defender) {
-    // Base red bar (full width)
     ctx.fillStyle = 'red';
     ctx.fillRect(defender.x, defender.y - 10, defender.width, 5);
 
-    // Green health portion (capped to 100%)
     const hpRatio = defender.hp / 100;
     const greenWidth = Math.min(hpRatio, 1) * defender.width;
     ctx.fillStyle = 'green';
     ctx.fillRect(defender.x, defender.y - 10, greenWidth, 5);
 
-    // Overheal portion (above the red bar)
     if (hpRatio > 1) {
         const grayWidth = (hpRatio - 1) * defender.width;
         ctx.fillStyle = 'gray';
         ctx.fillRect(defender.x, defender.y - 16, grayWidth, 5);
     }
 }
-
-
 
 function drawArrow(arrow) {
     if (images.arrow && images.arrow.complete) {
@@ -489,7 +446,6 @@ function drawTrajectory(startX, startY, velocityX, velocityY) {
         y += vy;
         vy += gravity;
         
-        // Check for collisions with obstacles
         let collided = false;
         for (const obstacle of obstacles) {
             if (x > obstacle.x && x < obstacle.x + obstacle.width && 
@@ -499,7 +455,6 @@ function drawTrajectory(startX, startY, velocityX, velocityY) {
             }
         }
         
-        // Check for collision with ground
         if (y > ground.y) {
             collided = true;
         }
@@ -522,14 +477,12 @@ function drawTrajectory(startX, startY, velocityX, velocityY) {
 function checkDefuserProximity() {
     let isSomeoneDefusing = false;
     
-    // First pass to check if anyone is already defusing
     gameState.defenders.forEach(defender => {
         if (defender.defusing) {
             isSomeoneDefusing = true;
         }
     });
     
-    // Second pass to handle proximity and defusing logic
     gameState.defenders.forEach((defender) => {
         const spikeCenterX = bomb.x + bomb.width/2;
         const spikeCenterY = bomb.y + bomb.height/2;
@@ -540,16 +493,13 @@ function checkDefuserProximity() {
         const minDist = 100;
         
         if (dist < minDist && bomb.planted && !bomb.defused) {
-            // Only allow defusing if no one else is defusing
             if (!isSomeoneDefusing) {
-                // Position to left or right of spike
                 if (defender.x < bomb.x) {
                     defender.targetX = bomb.x - defender.width - 10;
                 } else {
                     defender.targetX = bomb.x + bomb.width + 10;
                 }
                 
-                // Smooth movement to defuse position
                 const moveSpeed = 0.3;
                 defender.x += (defender.targetX - defender.x) * moveSpeed;
                 defender.y = ground.y - defender.height + 10;
@@ -560,14 +510,13 @@ function checkDefuserProximity() {
                 }
                 defender.defusing = true;
                 bomb.defuserNearby = true;
-                isSomeoneDefusing = true; // Mark that someone is now defusing
+                isSomeoneDefusing = true;
             }
         } else {
             defender.defusing = false;
         }
     });
 
-    // If no defenders are near, reset defuser nearby flag
     if (gameState.defenders.every(d => !d.defusing)) {
         bomb.defuserNearby = false;
     }
@@ -577,7 +526,6 @@ function updateBombTimer() {
     if (bomb.planted && !bomb.defused && bomb.defuserNearby) {
         const defuseTimeLeft = bomb.defuseTime - (Date.now() - bomb.defuseStartTime);
         
-        // Draw defuse progress bar
         const progressWidth = 100;
         const progressHeight = 10;
         const progressX = bomb.x - progressWidth/2 + bomb.width/2;
@@ -592,7 +540,7 @@ function updateBombTimer() {
         
         if (defuseTimeLeft <= 0) {
             bomb.defused = true;
-            endLevel(false); // Defenders win
+            endLevel(false);
         }
     }
 }
@@ -613,18 +561,15 @@ function applyArrowDamage() {
                 arrow.y + arrow.height/2 > defender.y && 
                 arrow.y - arrow.height/2 < defender.y + defender.height) {
                 
-                // Check if headshot (upper 1/3 of defender)
                 const isHeadshot = arrow.y < defender.y + defender.height/4;
                 const damage = isHeadshot ? 100 : 50;
                 
                 defender.hp -= damage;
                 arrow.stuck = true;
                 
-                // Show damage text
                 showDamageText(arrow.x, arrow.y, damage, isHeadshot);
                 
                 if (defender.hp <= 0) {
-                    // Check if this was the defusing defender
                     if (defender.defusing) {
                         defuserDied = true;
                         bomb.defuserNearby = false;
@@ -633,23 +578,20 @@ function applyArrowDamage() {
                     gameState.defenders.splice(d, 1);
                     gameState.enemiesDefeated++;
                     
-                    // Update enemy count in HUD
                     document.getElementById('enemyCount').textContent = gameState.defenders.length;
                     
-                    // Check if all defenders are defeated
                     if (gameState.defenders.length === 0) {
-                        endLevel(true); // Player wins
+                        endLevel(true);
+                        return;
                     }
                 }
                 
-                // Remove the arrow that hit
                 gameState.arrows.splice(a, 1);
                 break;
             }
         }
     }
     
-    // If the defusing defender died, allow another defender to start defusing
     if (defuserDied) {
         checkDefuserProximity();
     }
@@ -665,7 +607,6 @@ function showDamageText(x, y, damage, isHeadshot) {
         maxAge: 40
     };
 
-    // Add to damage text array (initialized in gameState)
     gameState.damageTexts.push(text);
 }
 
@@ -674,9 +615,8 @@ function updateDamageTexts() {
         const text = gameState.damageTexts[i];
         
         text.age++;
-        text.y -= 1; // Float upward
+        text.y -= 1;
         
-        // Draw with fade out
         const alpha = 1 - (text.age / text.maxAge);
         ctx.fillStyle = text.color === 'red' ? 
             `rgba(255, 0, 0, ${alpha})` : 
@@ -685,45 +625,30 @@ function updateDamageTexts() {
         ctx.textAlign = 'center';
         ctx.fillText(text.value, text.x, text.y);
         
-        // Remove old texts
         if (text.age >= text.maxAge) {
             gameState.damageTexts.splice(i, 1);
         }
     }
 }
 
-// Replace the updateDefenders function with this simplified version:
 function updateDefenders() {
-    // Check if anyone is currently defusing
     const defuser = gameState.defenders.find(d => d.defusing);
     
     gameState.defenders.forEach((defender, index) => {
-        // Ground check
         defender.y = ground.y - defender.height;
         defender.onGround = true;
 
-        if (defender.defusing) {
-            // This defender is defusing - they're already positioned correctly
-            return;
-        }
+        if (defender.defusing) return;
         
         if (defuser) {
-            // There's a defuser - position other defenders in a line near the spike
             const lineOffset = (index % 2 === 0 ? 1 : -1) * Math.ceil(index / 2) * (defender.width + 10);
-            
-            // Target position is to the side of the spike, forming a line
             defender.targetX = bomb.x + lineOffset;
-            
-            // Smooth movement to line position
             const moveSpeed = 0.2;
             defender.x += (defender.targetX - defender.x) * moveSpeed;
             defender.y = ground.y - defender.height + 10;
         } else {
-            // No one is defusing - move straight toward bomb
             const dx = bomb.x - defender.x;
             const moveDirection = dx > 0 ? 1 : -1;
-            
-            // Simple movement without obstacle checks
             defender.x += moveDirection * defender.speed;
         }
     });
@@ -754,8 +679,6 @@ function spawnDefenders() {
                 onGround: true
             });
             spawnInfo.spawned = true;
-            
-            // Update enemy count in HUD
             document.getElementById('enemyCount').textContent = gameState.defenders.length;
         }
     }
@@ -775,7 +698,6 @@ function updateArrows() {
             arrow.vy += gravity;
             arrow.angle = Math.atan2(arrow.vy, arrow.vx);
 
-            // Check collisions with obstacles
             for (const obstacle of obstacles) {
                 if (arrow.x + arrow.width/2 > obstacle.x && 
                     arrow.x - arrow.width/2 < obstacle.x + obstacle.width &&
@@ -788,20 +710,17 @@ function updateArrows() {
                 }
             }
             
-            // Check collision with ground
             if (arrow.y + arrow.height/2 > ground.y) {
                 arrow.y = ground.y - arrow.height/2;
                 arrow.stuck = true;
             }
             
-            // Check if arrow is out of bounds
             if (arrow.x < 0 || arrow.x > canvas.width || arrow.y > canvas.height) {
                 gameState.arrows.splice(i, 1);
                 continue;
             }
         }
 
-        // Remove old arrows
         if (Date.now() - arrow.timestamp > 3000) {
             gameState.arrows.splice(i, 1);
         }
@@ -811,63 +730,38 @@ function updateArrows() {
 function endLevel(playerWins) {
     if (!gameState.isRunning) return;
 
-    // Calculate stats and stars
-    const timeTaken = (Date.now() - gameState.startTime) / 1000; // in seconds
-    const accuracy = gameState.arrowsFired > 0 ? 
-        gameState.enemiesDefeated / gameState.arrowsFired : 0;
-
-    let stars = 0;
+    window.updateGameStats(gameState.arrowsFired, gameState.enemiesDefeated);
 
     if (playerWins) {
-        // Criteria for stars:
-        // 1 star: Basic completion
-        // 2 stars: Good time and some accuracy
-        // 3 stars: Excellent time and high accuracy
-        stars = 1; // At least 1 star for winning
-        
-        // Time criteria varies by level
-        const goodTimeThreshold = 20 + (gameState.level * 5);
-        const excellentTimeThreshold = 10 + (gameState.level * 3);
-        
-        if (timeTaken < goodTimeThreshold && accuracy > 0.5) {
-            stars = 2;
+        if (window.reportLevelComplete) {
+            window.reportLevelComplete(gameState.level, true);
         }
-        
-        if (timeTaken < excellentTimeThreshold && accuracy > 0.7) {
-            stars = 3;
-        }
-        
-        // Report stats to lobby
-        window.updateGameStats(gameState.arrowsFired, gameState.enemiesDefeated);
-        
-        // Report level completion
-        window.reportLevelComplete(gameState.level, stars);
     } else {
-        // Defender won - show message
         alert("The defenders have defused the spike! Try again.");
-        window.updateGameStats(gameState.arrowsFired, gameState.enemiesDefeated);
-        window.endGame();
+        if (window.endGame) {
+            window.endGame();
+        }
     }
 
-    // Stop the game
     gameState.isRunning = false;
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
 }
 
 // Main game loop
 function drawScene() {
     if (!gameState.isRunning) return;
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw background
     if (images.background && images.background.complete) {
         ctx.globalAlpha = 0.3;
         ctx.drawImage(images.background, 0, 0, canvas.width, canvas.height);
         ctx.globalAlpha = 1.0;
     }
 
-    // Draw trajectory if aiming (unchanged)
     if (isDragging && startPoint && currentPoint) {
         const dx = startPoint.x - currentPoint.x;
         const dy = startPoint.y - currentPoint.y;
@@ -878,7 +772,6 @@ function drawScene() {
             dy * 0.2
         );
         
-        // Draw power meter (unchanged)
         const distance = Math.sqrt(dx * dx + dy * dy);
         const strength = Math.min(distance / 200, 1);
         const meterX = sova.x + sova.width + 10;
@@ -890,35 +783,28 @@ function drawScene() {
         ctx.fillRect(meterX, meterY + 50, 10, -100 * strength);
     }
 
-    // Draw ground
     drawRect(ground);
 
-    // Draw obstacles
     obstacles.forEach(obstacle => {
         drawRect(obstacle);
     });
 
-    // Draw defenders
     gameState.defenders.forEach(defender => {
         drawRect(defender);
         drawHealthBar(defender);
     });
 
-    // Draw Sova character
     drawRect(sova);
     spawnDefenders();
 
-    // Draw spike/bomb
     if (bomb.planted) {
         drawRect(bomb);
     }
 
-    // Draw arrows
     gameState.arrows.forEach(arrow => {
         drawArrow(arrow);
     });
 
-    // Update game logic
     updateArrows();
     updateDefenders();
     checkDefuserProximity();
@@ -926,6 +812,5 @@ function drawScene() {
     applyArrowDamage();
     updateDamageTexts();
 
-    // Continue animation loop
     animationId = requestAnimationFrame(drawScene);
 }
