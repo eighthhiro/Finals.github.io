@@ -269,11 +269,6 @@ document.getElementById('homeLink').addEventListener('click', function() {
     switchBackgroundVideo('./assets/Home.mp4');
 });
 
-document.getElementById('settingsLink').addEventListener('click', function() {
-    // Implement settings functionality if needed
-    alert('Settings panel is coming soon!');
-});
-
 returnToLobby.addEventListener('click', () => {
     endGame();
 });
