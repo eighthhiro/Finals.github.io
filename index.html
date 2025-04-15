@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sova</title> 
+    <title>SOVA</title> 
     <link rel="icon" href="./assets/val.png" type="image/x-icon">
     <link rel="stylesheet" href="./style.css">
 </head>
@@ -27,9 +27,7 @@
     <div id="lobby">
         <!-- Video Background Placeholder -->
         <video id="video-background" autoplay muted loop>
-            <source src="./assets/Home.mp4" type="video/mp4">
-            <!-- Fallback image if video doesn't load -->
-            <img src="./assets/Lobby.png" alt="Lobby Background">
+            <source src="./assets/background/Home.mp4" type="video/mp4">
         </video>
 
         <!-- Navbar -->
@@ -43,6 +41,43 @@
             </div>
         </div>
 
+        <!-- Beta ver. Note -->
+        <div class="beta-note">
+            <div class="beta-note-header">
+              <span class="beta-badge">BETA</span>
+              <h3>SOVA</h3>
+            </div>
+            
+            <div class="beta-video-container">
+              <video autoplay muted loop class="beta-video">
+                <source src="./assets/background/beta-video.mp4" type="video/mp4">
+              </video>
+            </div>
+            
+            <div class="beta-note-content">
+              <h4>CURRENT FEATURES</h4>
+              <ul class="beta-features">
+                <li>Iron & Bronze Ranks</li>
+                <li>Sova Abilities</li>
+                <li>Defender: Sage</li>
+                <li>Default Map</li>
+              </ul>
+              
+              <h4 class="coming-soon-header">COMING SOON</h4>
+              <ul class="beta-coming-soon">
+                <li>Additional Ranks</li>
+                <li>More Defenders</li>
+                <li>New Maps</li>
+                <li>Special Events</li>
+              </ul>
+              
+              <div class="beta-version-info">
+                <span>v0.1.2</span>
+                <span class="beta-date">APR 2025</span>
+              </div>
+            </div>
+          </div>
+
         <!-- Main Content -->
         <div class="play-button-container">
             <button id="playButton" class="valorant-play-button">PLAY</button>
@@ -53,8 +88,7 @@
             <!-- Added video container for rank selection -->
             <div class="rank-video-container">
                 <video id="rank-video-background" autoplay muted loop>
-                    <source src="./assets/Play-Lobby.mp4" type="video/mp4">
-                    <img src="./assets/Rank-Selection.png" alt="Rank Selection Background">
+                    <source src="./assets/background/Play-Lobby.mp4" type="video/mp4">
                 </video>
             </div>
             
@@ -248,12 +282,8 @@
     </div>
 
     <!-- JAVASCRIPT LINKS-->
-
-    <!-- Loading and Lobby Sounds-->
-    <script src="./lobby-handler.js"></script>
-
-    <!-- Lobby and Rank Interface -->
-    <script src="./lobby-ui.js"></script>
+    <!-- Lobby Handler -->
+    <script type="module" src="./js/lobby/main.js"></script>
 
     <!-- Game Renderer -->
     <script type="module" src="./game.js"></script>

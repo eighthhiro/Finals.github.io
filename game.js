@@ -103,7 +103,7 @@ let images = {};
 // Load all images
 function loadImages() {
     const imageList = {
-        background: "assets/valo bg.jpg",
+        background: "assets/background/valo bg.jpg",
         sova: "assets/Sova-Standing.png",
         arrow: "assets/Arrow.png",
         spike: "assets/Spike.png",
