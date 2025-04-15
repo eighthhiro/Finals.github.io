@@ -48,6 +48,8 @@ function endGame() {
     
     // Switch back to home video
     switchBackgroundVideo('./assets/background/Home.mp4');
+    const betaNote = document.querySelector('.beta-note');
+    if (betaNote) betaNote.classList.remove('hidden');
     
     // Resume lobby music
     audioManager.play('lobbyMusic');
